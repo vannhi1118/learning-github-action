@@ -6,6 +6,11 @@ on:
             - master
             - main
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -23,9 +28,21 @@ jobs:
 
             - name: Build
               run: npm run build
+            
+            - name: Test
+              run: npm test
+            
+            - name: Test Report
+              uses: dorny/test-reporter@v1
+              if: success() || failure()    # run this step even if previous step failed
+              with:
+                name: JEST Tests            # Name of the check run which will be created
+                path: reports/jest-*.xml    # Path to test results
+                reporter: jest-junit        # Format of test results
 
             - name: Deploy
               uses: peaceiris/actions-gh-pages@v3
+              if: success()
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./dist
