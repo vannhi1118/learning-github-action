@@ -7,9 +7,9 @@ on:
             - main
 
 permissions:
-  contents: read
-  actions: write
-  checks: write
+    contents: read
+    actions: write
+    checks: write
 
 jobs:
     deploy:
@@ -30,7 +30,7 @@ jobs:
               run: npm run build
             
             - name: Test
-              run: npm test --reporters="default"
+              run: npm test
             
             - name: Test Report
               uses: dorny/test-reporter@v1
